@@ -28,8 +28,9 @@
 
 #Description
 ##
-###1.Use example power consumption is 1.9 mA.
+###Use this example power consumption is 1.9 mA.
 
-###2.If you need lower power consumption, you need to join the QQ group [984791243](https://jq.qq.com/?_wv=1027&k=VAh4pqTF) to get information.
+- If you need lower power consumption, you need to join the QQ group [984791243](https://jq.qq.com/?_wv=1027&k=VAh4pqTF) to get information.
 
 - The limit sleep current of S76G chip can reach 157uA, we are still exploring
+
