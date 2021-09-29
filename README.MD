@@ -39,7 +39,6 @@
 
 
 ## Q&A
-##
 ### 1. Arduino IDE user prerequisites 
 - Please follow this guide [Getting-started](https://github.com/stm32duino/Arduino_Core_STM32#getting-started) to complete the installation of `Arduino_Core_STM32` 
 - Select the following picture in Arduino=> tools
