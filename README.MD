@@ -23,6 +23,11 @@
 | :--------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 | T-Impulse | [Taobao](https://item.taobao.com/item.htm?spm=a2oq0.12575281.0.0.50111debkzn8YY&ft=t&id=655131792555)   [AliExpress](https://www.aliexpress.com/item/1005003308747726.html)   |
 
+
+<h3 align = "left">Application :</h3>
+
+- [T-Echo SoftRF](https://github.com/lyusupov/SoftRF/wiki/Badge-Edition)
+
 <h3 align = "left">Introduce :</h3>
 
 ![](image/introduce.jpg)
@@ -59,3 +64,8 @@
     ![](image/4.png)
 - Click upload again. 
     ![](image/5.png)
+
+### 5. What is the lowest sleep power consumption current ?
+
+- When using the SoftRF firmware test, the lowest power consumption during sleep is about 124uA
+![](image/current.jpg)
