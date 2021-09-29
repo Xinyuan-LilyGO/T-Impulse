@@ -1,5 +1,39 @@
+<h1 align = "center">🌟LilyGo T-Impulse🌟</h1>
 
-# Quick Start
+## Using Arduino IDE
+1. Download [Arduino IDE](https://www.arduino.cc/en/software)
+2. Open Arduino, open preferences-> add https://github.com/stm32duino/BoardManagerFiles/raw/master/package_stmicroelectronics_index.json to the board installation manager address list
+3. Open the board installation manager, wait for the index update to complete, select 'STM32 MCU based boards' and click install
+4. After the installation is complete, select 'Necleo-64' in the board list.Detailed configuration reference Q&A
+
+5. Copy all the folders in the lib directory to `"C:\User\<YourName>\Documents\Arduino\libraries"`
+
+
+## USE PlatformIO
+
+1. Install[VSCODE](https://code.visualstudio.com/)and[Python](https://www.python.org/)
+2. Search for the PlatformIO plug-in in the VSCODE extension and install it.
+3. After the installation is complete and the reload is completed, there will be a small house icon in the lower left corner. Click to display the Platformio IDE home page
+4. Go to file - > Open folder - > Select the LilyGO-T-Impulse folder and click the (√) symbol in the lower left corner to compile (→) for upload.
+
+
+<h3 align = "left">Product 📷:</h3>
+
+|  Product   |                                                                                                Product  Link                                                                                                 |
+| :--------: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+| T-Impulse | [Taobao](https://item.taobao.com/item.htm?spm=a2oq0.12575281.0.0.50111debkzn8YY&ft=t&id=655131792555)   [AliExpress](https://www.aliexpress.com/item/1005003308747726.html)   |
+
+<h3 align = "left">Introduce :</h3>
+
+![](image/introduce.jpg)
+
+
+<h3 align = "left">PinOut :</h3>
+
+![](image/PinOut.jpg)
+
+
+## Q&A
 ##
 ### 1. Arduino IDE user prerequisites 
 - Please follow this guide [Getting-started](https://github.com/stm32duino/Arduino_Core_STM32#getting-started) to complete the installation of `Arduino_Core_STM32` 
