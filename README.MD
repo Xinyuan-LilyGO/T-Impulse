@@ -26,7 +26,7 @@
 
 <h3 align = "left">Application :</h3>
 
-- [T-Echo SoftRF](https://github.com/lyusupov/SoftRF/wiki/Badge-Edition)
+- [T-Impulse SoftRF](https://github.com/lyusupov/SoftRF/wiki/Bracelet-Edition)
 
 <h3 align = "left">Introduce :</h3>
 
