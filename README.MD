@@ -27,7 +27,7 @@
 <h3 align = "left">Application :</h3>
 
 - [T-Impulse SoftRF](https://github.com/lyusupov/SoftRF/wiki/Bracelet-Edition)
-
+- [S7XG lib](https://github.com/xoseperez/s7xg)
 <h3 align = "left">Introduce :</h3>
 
 ![](image/introduce.jpg)
