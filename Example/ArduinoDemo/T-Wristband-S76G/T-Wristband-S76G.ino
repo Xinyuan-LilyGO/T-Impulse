@@ -1,10 +1,9 @@
-#include <Wire.h> // Only needed for Arduino 1.6.5 and earlier
-#include <SPI.h>
-#include <LoRa.h>      //https://github.com/sandeepmistry/arduino-LoRa
+#include <LoRa.h>      //https://github.com/sandeepmistry/arduino-LoRa    Need to comment out LoRa. Judgement of the detection version in begin()
 #include <TinyGPS++.h> //https://github.com/mikalhart/TinyGPSPlus
 #include <U8g2lib.h>   //https://github.com/olikraus/u8g2
 #include <ICM_20948.h>
 #include "STM32LowPower.h"
+#include <STM32RTC.h>
 
 #define DEBUG(x) Serial.print(x);
 #define DEBUGLN(x) Serial.println(x);
@@ -33,7 +32,8 @@
 //ICM20948
 #define ICM20948_ADDR 0x69
 
-#define PwrSwitch1_8V PA4
+#define PwrSwitchGPS PA3
+#define PwrSwitch1_8V PB0
 #define BatteryVol PC4
 
 void GPS(void);
@@ -41,20 +41,24 @@ void Accel(void);
 void Accel2(void);
 void Gyr(void);
 void Mag(void);
+void MagCalibration(void);
 void Sender(void);
 void Reciver(void);
 void BatteryVoltage(void);
+void Compass(void);
+void Rtc(void);
 
 U8G2_SSD1306_64X32_1F_F_HW_I2C u8g2(U8G2_R0, OLED_RESET, MySCL, MySDA);
 TinyGPSPlus gps;
 HardwareSerial gpsPort(GPS_RX, GPS_TX);
 ICM_20948_I2C imu;
+STM32RTC &rtc = STM32RTC::getInstance();
 
-const uint8_t index_max = 8;
+const uint8_t index_max = 9;
 typedef void (*funcCallBackTypedef)(void);
-funcCallBackTypedef LilyGoCallBack[] = {GPS, Accel, Accel2, Gyr, Mag, Sender, Reciver, BatteryVoltage};
+funcCallBackTypedef LilyGoCallBack[] = {Rtc, Sender, Reciver, GPS, BatteryVoltage, Accel, Accel2, Gyr, Mag /* , Compass */};
 uint8_t funcSelectIndex = 0;
- 
+
 uint32_t Millis = 0;
 uint32_t Last = 0;
 uint32_t LoRa_Count = 0;
@@ -106,18 +110,19 @@ void SSD1306_Init(void)
   u8g2.setFont(u8g2_font_fub14_tf);
   u8g2.drawStr(2, 18, "LilyGo");
   u8g2.sendBuffer();
+  u8g2.drawFrame(2, 25, 60, 6);
   for (int i = 0; i < 0xFF; i++)
   {
     u8g2.setContrast(i);
-    u8g2.drawFrame(2, 25, 60, 6);
     u8g2.drawBox(3, 26, (uint8_t)(0.231 * i), 5);
     u8g2.sendBuffer();
   }
   for (int i = 0; i < 0xFF; i++)
   {
     u8g2.setContrast(0xFF - i);
-    delay(10);
+    delay(3);
   }
+  Serial.println("SSD1306 done");
 }
 void SSD1306_Sleep(void)
 {
@@ -191,6 +196,7 @@ bool LoRa_Init(void)
     HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);
     delay(10);
   }
+  Serial.println("Lora done");
   return true;
 }
 void LoRa_Sleep(void)
@@ -224,6 +230,8 @@ void Sender(void)
     u8g2.setFont(u8g2_font_IPAandRUSLCD_tr);
     u8g2.drawStr(0, 8, "LoRa Send");
     u8g2.setCursor(0, 20);
+    Serial.print("LilyGo ");
+    Serial.println(LoRa_Count);
     u8g2.print("LilyGo ");
     u8g2.print(LoRa_Count++);
     u8g2.sendBuffer();
@@ -270,6 +278,64 @@ void Reciver(void)
 }
 
 /***
+ *        ____    __        
+ *       / __ \  / /_  _____
+ *      / /_/ / / __/ / ___/
+ *     / _, _/ / /_  / /__  
+ *    /_/ |_|  \__/  \___/  
+ *                          
+ */
+uint8_t CalcWeek(uint16_t _year, uint8_t _mon, uint8_t _day)
+{
+  uint8_t y, c, m, d;
+  int16_t w;
+  if (_mon >= 3)
+  {
+    m = _mon;
+    y = _year % 100;
+    c = _year / 100;
+    d = _day;
+  }
+  else
+  {
+    m = _mon + 12;
+    y = (_year - 1) % 100;
+    c = (_year - 1) / 100;
+    d = _day;
+  }
+
+  w = y + y / 4 + c / 4 - 2 * c + ((uint16_t)26 * (m + 1)) / 10 + d - 1;
+  if (w == 0)
+  {
+    w = 7;
+  }
+  else if (w < 0)
+  {
+    w = 7 - (-w) % 7;
+  }
+  else
+  {
+    w = w % 7;
+  }
+  return w;
+}
+
+void Rtc(void)
+{
+  if ((millis() - Millis) > 100)
+  {
+    u8g2.clearBuffer();
+    u8g2.setFont(u8g2_font_IPAandRUSLCD_tr);
+    u8g2.setCursor(0, 8);
+    u8g2.printf("%02d/%02d/%02d ", rtc.getDay(), rtc.getMonth(), rtc.getYear());
+    u8g2.setCursor(0, 24);
+    u8g2.printf("%02d:%02d:%02d", rtc.getHours(), rtc.getMinutes(), rtc.getSeconds());
+    u8g2.sendBuffer();
+
+    Millis = millis();
+  }
+}
+/***
  *       _____ _____   _____ 
  *      / ____|  __ \ / ____|
  *     | |  __| |__) | (___  
@@ -279,35 +345,36 @@ void Reciver(void)
  *                           
  *                           
  */
-void GPS_WaitAck(String cmd, String arg = "")
+bool GPS_WaitAck(String cmd, String arg = "")
 {
-  while (1)
+  gpsPort.flush();
+  if (arg != "")
   {
-    if (arg != "")
+    gpsPort.print(cmd);
+    gpsPort.print(" ");
+    gpsPort.println(arg);
+  }
+  else
+  {
+    gpsPort.println(cmd);
+  }
+  //String ack = "";
+  uint32_t smap = millis() + 500;
+  while (millis() < smap)
+  {
+    if (gpsPort.available() > 0)
     {
-      gpsPort.print(cmd);
-      gpsPort.print(" ");
-      gpsPort.println(arg);
-    }
-    else
-    {
-      gpsPort.println(cmd);
-    }
-    String ack = "";
-    uint32_t smap = millis() + 500;
-    while (millis() < smap)
-    {
-      if (gpsPort.available() > 0)
+      //ack = gpsPort.readStringUntil('\n');
+      //String acc = "[" + cmd.substring(1) + "] " + "Done";
+      //if (ack.startsWith(acc))
+      if (gpsPort.find("Done"))
       {
-        ack = gpsPort.readStringUntil('\n');
-        String acc = "[" + cmd.substring(1) + "] " + "Done";
-        if (ack.startsWith(acc))
-        {
-          return;
-        }
+        return true;
       }
     }
   }
+  Serial.println("GPS Send cmd Fail");
+  return false;
 }
 void GPS_Init(void)
 {
@@ -321,7 +388,7 @@ void GPS_Init(void)
   delay(200);
   //Set  Reset Pin as 1
   digitalWrite(GPS_RST, HIGH);
-  delay(100);
+  delay(500);
 
   GPS_WaitAck("@GSTP");
   GPS_WaitAck("@BSSL", "0x2EF");
@@ -329,6 +396,7 @@ void GPS_Init(void)
   GPS_WaitAck("@GNS", "0x03");
   //! Start GPS connamd
   GPS_WaitAck("@GSR");
+  Serial.println("GPS done");
 }
 
 void GPS_Sleep(void)
@@ -342,45 +410,48 @@ void GPS_Sleep(void)
 
 void GPS(void)
 {
-
-  u8g2.clearBuffer();
-  u8g2.setFont(u8g2_font_IPAandRUSLCD_tr);
-  u8g2.drawStr(0, 8, "GPS test");
-
-  switch (GPS_count)
+  if (millis() - Millis > 100)
   {
-  case 0:
-    u8g2.drawDisc(58, 4, 4, U8G2_DRAW_UPPER_RIGHT);
-    GPS_count++;
-    break;
-  case 1:
-    u8g2.drawDisc(58, 4, 4, U8G2_DRAW_UPPER_LEFT);
-    GPS_count++;
-    break;
-  case 2:
-    u8g2.drawDisc(58, 4, 4, U8G2_DRAW_LOWER_LEFT);
-    GPS_count++;
-    break;
-  default:
-    u8g2.drawDisc(58, 4, 4, U8G2_DRAW_LOWER_RIGHT);
-    GPS_count = 0;
-    break;
+    u8g2.clearBuffer();
+    u8g2.setFont(u8g2_font_IPAandRUSLCD_tr);
+    u8g2.drawStr(0, 8, "GPS test");
+
+    switch (GPS_count)
+    {
+    case 0:
+      u8g2.drawDisc(58, 4, 4, U8G2_DRAW_UPPER_RIGHT);
+      GPS_count++;
+      break;
+    case 1:
+      u8g2.drawDisc(58, 4, 4, U8G2_DRAW_UPPER_LEFT);
+      GPS_count++;
+      break;
+    case 2:
+      u8g2.drawDisc(58, 4, 4, U8G2_DRAW_LOWER_LEFT);
+      GPS_count++;
+      break;
+    default:
+      u8g2.drawDisc(58, 4, 4, U8G2_DRAW_LOWER_RIGHT);
+      GPS_count = 0;
+      break;
+    }
+    u8g2.setCursor(0, 16);
+    u8g2.print(F("Fix Val="));
+    u8g2.setCursor(48, 16);
+    u8g2.print(Value);
+
+    u8g2.setCursor(0, 24);
+    u8g2.print(F("Lat="));
+    u8g2.setCursor(34, 24);
+    u8g2.print(Lat);
+
+    u8g2.setCursor(0, 32);
+    u8g2.print(F("Long="));
+    u8g2.setCursor(42, 32);
+    u8g2.print(Long);
+    u8g2.sendBuffer();
+    Millis = millis();
   }
-  u8g2.setCursor(0, 16);
-  u8g2.print(F("Fix Val="));
-  u8g2.setCursor(48, 16);
-  u8g2.print(Value);
-
-  u8g2.setCursor(0, 24);
-  u8g2.print(F("Lat ="));
-  u8g2.setCursor(34, 24);
-  u8g2.print(Lat);
-
-  u8g2.setCursor(0, 32);
-  u8g2.print(F("Long ="));
-  u8g2.setCursor(42, 32);
-  u8g2.print(Long);
-  u8g2.sendBuffer();
   // Dispatch incoming characters
   while (gpsPort.available() > 0)
   {
@@ -425,6 +496,7 @@ void GPS(void)
     DEBUG(gps.date.month());
     DEBUG(F(" Day="));
     DEBUGLN(gps.date.day());
+    rtc.setDate(CalcWeek(gps.date.year(), gps.date.month(), gps.date.day()), gps.date.day(), gps.date.month(), gps.date.year() - 2000);
   }
   if (gps.time.isUpdated())
   {
@@ -440,6 +512,7 @@ void GPS(void)
     DEBUG(gps.time.second());
     DEBUG(F(" Hundredths="));
     DEBUGLN(gps.time.centisecond());
+    rtc.setTime(gps.time.hour() < 16 ? gps.time.hour() + 8 : 24 - gps.time.hour() + 8, gps.time.minute(), gps.time.second());
   }
   if (gps.speed.isUpdated())
   {
@@ -578,7 +651,7 @@ void Accel2(void)
     //y
     u8g2.drawBox(32, (imu.accY() > 0 ? 17 - (abs(imu.accY()) / 64) : 16), 6, abs(imu.accY()) / 64);
     //z
-    u8g2.drawBox(54, (imu.accZ() > 0 ? 17 - (abs(imu.accZ()) / 64) : 16), 6, abs(imu.accZ()) / 64);
+    u8g2.drawBox(54, (imu.accZ() < 0 ? 17 - (abs(imu.accZ()) / 64) : 16), 6, abs(imu.accZ()) / 64);
     u8g2.sendBuffer();
   }
 }
@@ -664,6 +737,42 @@ void Mag(void)
 }
 
 /***
+ *       ______                                     
+ *      / ____/___  ____ ___  ____  ____ ___________
+ *     / /   / __ \/ __ `__ \/ __ \/ __ `/ ___/ ___/
+ *    / /___/ /_/ / / / / / / /_/ / /_/ (__  |__  ) 
+ *    \____/\____/_/ /_/ /_/ .___/\__,_/____/____/  
+ *                        /_/                       
+ */
+void Compass(void)
+{
+  static int Ang_last;
+  if (millis() - Millis > 50)
+  {
+    if (imu.dataReady())
+    {
+      imu.getAGMT();
+      u8g2.clearBuffer();
+      u8g2.setFont(u8g2_font_IPAandRUSLCD_tr);
+      u8g2.drawStr(34, 16, "Angle");
+      u8g2.drawCircle(16, 16, 15, U8G2_DRAW_ALL);
+      u8g2.drawTriangle(14, 0, 19, 0, 17, 3);
+
+      int Ang_t = atan2(imu.accY(), imu.accX()) * 180.0 / PI;
+      Ang_t = Ang_t < 0 ? 360 + Ang_t : Ang_t;
+
+      Ang_last = (0.9 * Ang_last) + (0.1 * Ang_t);
+      u8g2.setCursor(33, 24);
+      u8g2.print(Ang_last);
+      u8g2.drawLine(16, 16, 16 + 13 * cos(Ang_last * PI / 180), 16 + 13 * sin(Ang_last * PI / 180));
+      u8g2.sendBuffer();
+
+      Millis = millis();
+    }
+  }
+}
+
+/***
  *     __      __   _ _                   
  *     \ \    / /  | | |                  
  *      \ \  / /__ | | |_ __ _  __ _  ___ 
@@ -673,17 +782,71 @@ void Mag(void)
  *                              __/ |     
  *                             |___/      
  */
+ADC_HandleTypeDef hadc;
+static void MX_ADC_Init(void)
+{
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  hadc.Instance = ADC1;
+  hadc.Init.OversamplingMode = DISABLE;
+  hadc.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+  hadc.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc.Init.SamplingTime = ADC_SAMPLETIME_39CYCLES_5;
+  hadc.Init.ScanConvMode = ADC_SCAN_DIRECTION_FORWARD;
+  hadc.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc.Init.ContinuousConvMode = ENABLE;
+  hadc.Init.DiscontinuousConvMode = DISABLE;
+  hadc.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc.Init.DMAContinuousRequests = DISABLE;
+  hadc.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+  hadc.Init.LowPowerAutoWait = DISABLE;
+  hadc.Init.LowPowerFrequencyMode = DISABLE;
+  hadc.Init.LowPowerAutoPowerOff = DISABLE;
+  if (HAL_ADC_Init(&hadc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfig.Channel = ADC_CHANNEL_14;
+  sConfig.Rank = ADC_RANK_CHANNEL_NUMBER;
+  if (HAL_ADC_ConfigChannel(&hadc, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  HAL_ADCEx_Calibration_Start(&hadc, ADC_SINGLE_ENDED);
+}
+uint32_t Vot = 0, Millis_t = 0;
+uint8_t i = 0;
 void BatteryVoltage(void)
 {
-  if (millis() - Millis > 100)
+  HAL_ADC_Start(&hadc);
+  if (millis() - Millis_t > 5 && i < 20)
   {
-    int Vot = analogRead(BatteryVol) * 2;
+    i++;
+
+    Vot += HAL_ADC_GetValue(&hadc);
+    //Vot += analogRead(BatteryVol);
+    Serial.println("Vot");
+    Serial.println(Vot);
+    Millis_t = millis();
+  }
+
+  if (millis() - Millis > 500)
+  {
+
+    Vot /= i;
+    Serial.println(Vot);
     u8g2.clearBuffer();
     u8g2.setFont(u8g2_font_IPAandRUSLCD_tr);
     u8g2.drawStr(17, 8, "VBATT");
     u8g2.setCursor(20, 24);
-    u8g2.print(Vot * 3.3 / 1024);
+    u8g2.print((Vot * 3.3 * 2) / 4096);
+    u8g2.print("V");
     u8g2.sendBuffer();
+    i = 0;
+    Vot = 0;
     Millis = millis();
   }
 }
@@ -715,6 +878,10 @@ void Sleep(void)
   pinMode(MySCL, OUTPUT);
   digitalWrite(MySDA, HIGH);
   digitalWrite(MySCL, HIGH);
+  pinMode(PwrSwitch1_8V, OUTPUT);
+  pinMode(PwrSwitchGPS, OUTPUT);
+  digitalWrite(PwrSwitch1_8V, LOW);
+  digitalWrite(PwrSwitchGPS, LOW);
 
   pinMode(BatteryVol, INPUT_ANALOG);
 
@@ -740,13 +907,19 @@ void Sleep(void)
 void BoardInit(void)
 {
   pinMode(PwrSwitch1_8V, OUTPUT);
+  pinMode(PwrSwitchGPS, OUTPUT);
   digitalWrite(PwrSwitch1_8V, HIGH);
-  Serial.begin(115200);
+  digitalWrite(PwrSwitchGPS, HIGH);
 
-  SSD1306_Init();
-  ICM20948_Init();
+  Serial.begin(115200);
+  //SPI.begin();
+  Wire.begin(MySDA, MySCL);
+  rtc.begin();
   LoRa_Init();
   GPS_Init();
+  MX_ADC_Init();
+  SSD1306_Init();
+  ICM20948_Init();
 
   pinMode(BatteryVol, INPUT_ANALOG);
   pinMode(TTP223_VDD_PIN, OUTPUT);
