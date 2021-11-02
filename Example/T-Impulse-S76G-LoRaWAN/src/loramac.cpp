@@ -64,7 +64,7 @@ void printVariables()
     }
     float batt_lvl = float((Volt * 3.3 * 2) / 4096);
     Serial.printf("BatteryVol : %f\n", batt_lvl);
-    lpp.addVoltage(8, batt_lvl);
+    lpp.addAnalogInput(8, batt_lvl);
 }
 
 void os_getArtEui(u1_t *buf)
