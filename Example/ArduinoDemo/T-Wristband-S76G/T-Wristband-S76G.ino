@@ -7,13 +7,13 @@
 
 #define DEBUG(x) Serial.print(x);
 #define DEBUGLN(x) Serial.println(x);
-//GPS
+// GPS
 #define GPS_RST PB2
 #define GPS_RX PC11
 #define GPS_TX PC10
 #define GPS_LEVEL_SHIFTER_EN PC6
 #define GPS_BAUD_RATE 115200
-//LORA
+// LORA
 #define LORA_RST PB10
 #define LORA_DIO0 PB11
 #define LORA_MOSI PB15
@@ -22,14 +22,14 @@
 #define LORA_NSS PB12
 #define LoRa_frequency 868E6
 #define RADIO_ANT_SWITCH_RXTX PA1
-//SSD1306
-#define MySDA PB7      //ICM20948
-#define MySCL PB6      //ICM20948
+// SSD1306
+#define MySDA PB7      // ICM20948
+#define MySCL PB6      // ICM20948
 #define OLED_RESET PA8 // Reset pin # (or -1 if sharing Arduino reset pin)
-//TOUCH
+// TOUCH
 #define TTP223_VDD_PIN PA2
 #define TouchPad PA0
-//ICM20948
+// ICM20948
 #define ICM20948_ADDR 0x69
 
 #define PwrSwitchGPS PA3
@@ -66,16 +66,16 @@ uint8_t GPS_count = 0;
 double Lat = 0, Long = 0;
 int Value = 0;
 /***
- *      _______               _     
- *     |__   __|             | |    
- *        | | ___  _   _  ___| |__  
- *        | |/ _ \| | | |/ __| '_ \ 
+ *      _______               _
+ *     |__   __|             | |
+ *        | | ___  _   _  ___| |__
+ *        | |/ _ \| | | |/ __| '_ \
  *        | | (_) | |_| | (__| | | |
  *        |_|\___/ \__,_|\___|_| |_|
- *                                  
- *                                  
+ *
+ *
  */
-//Back to press time
+// Back to press time
 int TouchCallback(void)
 {
   int TouchMillis = millis();
@@ -91,14 +91,14 @@ int TouchCallback(void)
   return 0;
 }
 /***
- *       _____ _____ _____  __ ____   ___    __     ____  _      ______ _____  
- *      / ____/ ____|  __ \/_ |___ \ / _ \  / /    / __ \| |    |  ____|  __ \ 
+ *       _____ _____ _____  __ ____   ___    __     ____  _      ______ _____
+ *      / ____/ ____|  __ \/_ |___ \ / _ \  / /    / __ \| |    |  ____|  __ \
  *     | (___| (___ | |  | || | __) | | | |/ /_   | |  | | |    | |__  | |  | |
  *      \___ \\___ \| |  | || ||__ <| | | | '_ \  | |  | | |    |  __| | |  | |
  *      ____) |___) | |__| || |___) | |_| | (_) | | |__| | |____| |____| |__| |
- *     |_____/_____/|_____/ |_|____/ \___/ \___/   \____/|______|______|_____/ 
- *                                                                             
- *                                                                             
+ *     |_____/_____/|_____/ |_|____/ \___/ \___/   \____/|______|______|_____/
+ *
+ *
  */
 void SSD1306_Init(void)
 {
@@ -134,14 +134,14 @@ void SSD1306_Sleep(void)
   u8g2.sleepOn();
 }
 /***
- *      _           _____       
- *     | |         |  __ \      
- *     | |     ___ | |__) |__ _ 
+ *      _           _____
+ *     | |         |  __ \
+ *     | |     ___ | |__) |__ _
  *     | |    / _ \|  _  // _` |
  *     | |___| (_) | | \ \ (_| |
  *     |______\___/|_|  \_\__,_|
- *                              
- *                              
+ *
+ *
  */
 
 bool isrReceived = false;
@@ -278,12 +278,12 @@ void Reciver(void)
 }
 
 /***
- *        ____    __        
+ *        ____    __
  *       / __ \  / /_  _____
  *      / /_/ / / __/ / ___/
- *     / _, _/ / /_  / /__  
- *    /_/ |_|  \__/  \___/  
- *                          
+ *     / _, _/ / /_  / /__
+ *    /_/ |_|  \__/  \___/
+ *
  */
 uint8_t CalcWeek(uint16_t _year, uint8_t _mon, uint8_t _day)
 {
@@ -336,14 +336,14 @@ void Rtc(void)
   }
 }
 /***
- *       _____ _____   _____ 
+ *       _____ _____   _____
  *      / ____|  __ \ / ____|
- *     | |  __| |__) | (___  
- *     | | |_ |  ___/ \___ \ 
+ *     | |  __| |__) | (___
+ *     | | |_ |  ___/ \___ \
  *     | |__| | |     ____) |
- *      \_____|_|    |_____/ 
- *                           
- *                           
+ *      \_____|_|    |_____/
+ *
+ *
  */
 bool GPS_WaitAck(String cmd, String arg = "")
 {
@@ -358,15 +358,15 @@ bool GPS_WaitAck(String cmd, String arg = "")
   {
     gpsPort.println(cmd);
   }
-  //String ack = "";
+  // String ack = "";
   uint32_t smap = millis() + 500;
   while (millis() < smap)
   {
     if (gpsPort.available() > 0)
     {
-      //ack = gpsPort.readStringUntil('\n');
-      //String acc = "[" + cmd.substring(1) + "] " + "Done";
-      //if (ack.startsWith(acc))
+      // ack = gpsPort.readStringUntil('\n');
+      // String acc = "[" + cmd.substring(1) + "] " + "Done";
+      // if (ack.startsWith(acc))
       if (gpsPort.find("Done"))
       {
         return true;
@@ -382,11 +382,11 @@ void GPS_Init(void)
   pinMode(GPS_LEVEL_SHIFTER_EN, OUTPUT);
   digitalWrite(GPS_LEVEL_SHIFTER_EN, HIGH);
   pinMode(GPS_RST, GPIO_PULLUP);
-  //Set  Reset Pin as 0
+  // Set  Reset Pin as 0
   digitalWrite(GPS_RST, LOW);
-  //Scope shows 1.12s (Low Period)
+  // Scope shows 1.12s (Low Period)
   delay(200);
-  //Set  Reset Pin as 1
+  // Set  Reset Pin as 1
   digitalWrite(GPS_RST, HIGH);
   delay(500);
 
@@ -570,14 +570,14 @@ void GPS(void)
   }
 }
 /***
- *      _____ _____ __  __ ___   ___   ___  _  _   ___  
- *     |_   _/ ____|  \/  |__ \ / _ \ / _ \| || | / _ \ 
+ *      _____ _____ __  __ ___   ___   ___  _  _   ___
+ *     |_   _/ ____|  \/  |__ \ / _ \ / _ \| || | / _ \
  *       | || |    | \  / |  ) | | | | (_) | || || (_) |
- *       | || |    | |\/| | / /| | | |\__, |__   _> _ < 
+ *       | || |    | |\/| | / /| | | |\__, |__   _> _ <
  *      _| || |____| |  | |/ /_| |_| |  / /   | || (_) |
- *     |_____\_____|_|  |_|____|\___/  /_/    |_| \___/ 
- *                                                      
- *                                                      
+ *     |_____\_____|_|  |_|____|\___/  /_/    |_| \___/
+ *
+ *
  */
 bool ICM20948_Init(void)
 {
@@ -597,14 +597,14 @@ void ICM20948_Sleep(void)
   DEBUGLN("ICM20948 SLEEP!!");
 }
 /***
- *                       
- *         /\            
- *        /  \   ___ ___ 
+ *
+ *         /\
+ *        /  \   ___ ___
  *       / /\ \ / __/ __|
- *      / ____ \ (_| (__ 
+ *      / ____ \ (_| (__
  *     /_/    \_\___\___|
- *                       
- *                       
+ *
+ *
  */
 void Accel(void)
 {
@@ -646,24 +646,24 @@ void Accel2(void)
     u8g2.clearBuffer();
     u8g2.setFont(u8g2_font_IPAandRUSLCD_tr);
     u8g2.drawStr(2, 20, "x   y   z");
-    //x
+    // x
     u8g2.drawBox(12, (imu.accX() > 0 ? 17 - (abs(imu.accX()) / 64) : 16), 6, abs(imu.accX()) / 64);
-    //y
+    // y
     u8g2.drawBox(32, (imu.accY() > 0 ? 17 - (abs(imu.accY()) / 64) : 16), 6, abs(imu.accY()) / 64);
-    //z
+    // z
     u8g2.drawBox(54, (imu.accZ() < 0 ? 17 - (abs(imu.accZ()) / 64) : 16), 6, abs(imu.accZ()) / 64);
     u8g2.sendBuffer();
   }
 }
 /***
- *       _____            
- *      / ____|           
- *     | |  __ _   _ _ __ 
+ *       _____
+ *      / ____|
+ *     | |  __ _   _ _ __
  *     | | |_ | | | | '__|
- *     | |__| | |_| | |   
- *      \_____|\__, |_|   
- *              __/ |     
- *             |___/      
+ *     | |__| | |_| | |
+ *      \_____|\__, |_|
+ *              __/ |
+ *             |___/
  */
 void Gyr(void)
 {
@@ -696,14 +696,14 @@ void Gyr(void)
   }
 }
 /***
- *      __  __             
- *     |  \/  |            
- *     | \  / | __ _  __ _ 
+ *      __  __
+ *     |  \/  |
+ *     | \  / | __ _  __ _
  *     | |\/| |/ _` |/ _` |
  *     | |  | | (_| | (_| |
  *     |_|  |_|\__,_|\__, |
  *                    __/ |
- *                   |___/ 
+ *                   |___/
  */
 void Mag(void)
 {
@@ -737,12 +737,12 @@ void Mag(void)
 }
 
 /***
- *       ______                                     
+ *       ______
  *      / ____/___  ____ ___  ____  ____ ___________
  *     / /   / __ \/ __ `__ \/ __ \/ __ `/ ___/ ___/
- *    / /___/ /_/ / / / / / / /_/ / /_/ (__  |__  ) 
- *    \____/\____/_/ /_/ /_/ .___/\__,_/____/____/  
- *                        /_/                       
+ *    / /___/ /_/ / / / / / / /_/ / /_/ (__  |__  )
+ *    \____/\____/_/ /_/ /_/ .___/\__,_/____/____/
+ *                        /_/
  */
 void Compass(void)
 {
@@ -773,14 +773,14 @@ void Compass(void)
 }
 
 /***
- *     __      __   _ _                   
- *     \ \    / /  | | |                  
- *      \ \  / /__ | | |_ __ _  __ _  ___ 
+ *     __      __   _ _
+ *     \ \    / /  | | |
+ *      \ \  / /__ | | |_ __ _  __ _  ___
  *       \ \/ / _ \| | __/ _` |/ _` |/ _ \
  *        \  / (_) | | || (_| | (_| |  __/
  *         \/ \___/|_|\__\__,_|\__, |\___|
- *                              __/ |     
- *                             |___/      
+ *                              __/ |
+ *                             |___/
  */
 ADC_HandleTypeDef hadc;
 static void MX_ADC_Init(void)
@@ -827,7 +827,7 @@ void BatteryVoltage(void)
     i++;
 
     Vot += HAL_ADC_GetValue(&hadc);
-    //Vot += analogRead(BatteryVol);
+    // Vot += analogRead(BatteryVol);
     Serial.println("Vot");
     Serial.println(Vot);
     Millis_t = millis();
@@ -852,14 +852,14 @@ void BatteryVoltage(void)
 }
 
 /***
- *       _____ _                 
- *      / ____| |                
- *     | (___ | | ___  ___ _ __  
- *      \___ \| |/ _ \/ _ \ '_ \ 
+ *       _____ _
+ *      / ____| |
+ *     | (___ | | ___  ___ _ __
+ *      \___ \| |/ _ \/ _ \ '_ \
  *      ____) | |  __/  __/ |_) |
- *     |_____/|_|\___|\___| .__/ 
- *                        | |    
- *                        |_|    
+ *     |_____/|_|\___|\___| .__/
+ *                        | |
+ *                        |_|
  */
 void Sleep(void)
 {
@@ -912,8 +912,11 @@ void BoardInit(void)
   digitalWrite(PwrSwitchGPS, HIGH);
 
   Serial.begin(115200);
-  //SPI.begin();
-  Wire.begin(MySDA, MySCL);
+
+  Wire.setSCL(IICSCL);
+  Wire.setSDA(IICSDA);
+  Wire.begin();
+  
   rtc.begin();
   LoRa_Init();
   GPS_Init();
@@ -943,7 +946,7 @@ void loop()
   int Touch = TouchCallback();
   if (Touch != 0)
     DEBUGLN(Touch);
-  if (Touch > 3000) //Long press for 3 seconds to enter sleep mode
+  if (Touch > 3000) // Long press for 3 seconds to enter sleep mode
   {
     Sleep();
   }
