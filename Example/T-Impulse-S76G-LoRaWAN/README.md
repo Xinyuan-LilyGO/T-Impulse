@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-11-02 15:30:20
+ * @LastEditTime: 2021-11-02 17:23:10
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \T-Impulse-S76G-LoRaWAN\README.md
+-->
 
 # This article describes how to connect T-Impulse to TTN V3
 ### necessity:
@@ -7,7 +15,7 @@
 - A TTN account
 
 ## Step
-1. Open the TTN website, establish a gateway, and connect the gateway to the TTN server (refer to the construction of the gateway)
+1. Open the TTN website, establish a gateway, and connect the gateway to the TTN server [(refer to the construction of the gateway)](https://github.com/Xinyuan-LilyGO/SX1302_HAL_GATEWAY)
 ![](img/10.png)
 
 2. Create a new Applications
@@ -26,7 +34,7 @@ Where AppEUI and DevEUI are in LSB format, and AppKey is in MSB format
 5. Copy the three fields into the example program loramac.cpp array
 ![](img/7.png)
 
-6. Set T-Impulse to DFU mode (first press and hold the BOOT button, then press the RST button, release RST and then release the BOOT button), if you have any questions, please refer to here
+6. Set T-Impulse to DFU mode (first press and hold the BOOT button, then press the RST button, release RST and then release the BOOT button), if you have any questions, [(please refer to here)](https://github.com/Xinyuan-LilyGO/LilyGo-T-Impulse)
 
 7. Click platfromIO to start burning, the following picture is displayed, which means the upload is successful
 ![](img/8.png)
@@ -38,9 +46,9 @@ Where AppEUI and DevEUI are in LSB format, and AppKey is in MSB format
 9. T-Impulse has been successfully connected to TTN V3 so far
 ## Cayenne example
 Based on the above steps, forwarding the device to cayenne requires:
-  -cayenne account
+  - cayenne account
 
-  ### Step
+  ### Step:
   1. At present, a small part of the Cayenne package has been integrated in the sample program, so just create a Cayenne device directly
   ![](img/12.png)
   ![](img/13.png)
