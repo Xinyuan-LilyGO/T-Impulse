@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 11:27:42
- * @LastEditTime: 2021-11-08 17:32:59
+ * @LastEditTime: 2021-11-08 18:08:30
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \wristband-S76G\src\Bat.cpp
@@ -75,9 +75,9 @@ void Bat_loop(void)
         i = 0;
     }
 
-    if (millis() - Millis > 500 && millis() > 5000)
+    if (millis() - Millis > 5000)
     {
-        if (Volt < 2150)
+        if (HAL_ADC_GetValue(&hadc) < 2150)
         {
             u8g2->clearBuffer();
             u8g2->setFont(u8g2_font_battery19_tn);
