@@ -1,11 +1,4 @@
-/*
- * @Author: your name
- * @Date: 2021-11-05 11:48:15
- * @LastEditTime: 2021-11-08 17:19:38
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \T-Impulse-S76G-LoRaWAN\src\menu.cpp
- */
+
 #include "menu.h"
 
 #define MAX_APP 5

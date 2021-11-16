@@ -1,11 +1,4 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 11:27:48
- * @LastEditTime: 2021-11-06 18:48:41
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\Bat.h
- */
+
 #ifndef __BAT_H__
 #define __BAT_H__
 

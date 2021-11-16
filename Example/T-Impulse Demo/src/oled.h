@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 10:55:22
- * @LastEditTime: 2021-11-06 18:47:20
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\oled.h
- */
 
 #ifndef __OLED_H__
 #define __OLED_H__

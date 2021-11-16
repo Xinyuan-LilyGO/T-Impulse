@@ -1,11 +1,4 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 10:55:17
- * @LastEditTime: 2021-11-06 18:47:17
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\oled.cpp
- */
+
 #include "oled.h"
 #include "config.h"
 #include "RTC.h"

@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 11:12:50
- * @LastEditTime: 2021-11-08 16:39:41
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\imu->CPP
- */
 
 #include "IMU.h"
 #include <Wire.h>

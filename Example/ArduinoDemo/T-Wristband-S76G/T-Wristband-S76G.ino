@@ -874,6 +874,9 @@ void Sleep(void)
   SPI.end();
   Wire.end();
 
+  HAL_ADC_Stop(&hadc);
+  HAL_ADC_DeInit(&hadc);
+
   pinMode(MySDA, OUTPUT);
   pinMode(MySCL, OUTPUT);
   digitalWrite(MySDA, HIGH);
@@ -916,7 +919,7 @@ void BoardInit(void)
   Wire.setSCL(IICSCL);
   Wire.setSDA(IICSDA);
   Wire.begin();
-  
+
   rtc.begin();
   LoRa_Init();
   GPS_Init();

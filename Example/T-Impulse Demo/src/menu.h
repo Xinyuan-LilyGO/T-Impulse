@@ -1,11 +1,4 @@
-/*
- * @Author: your name
- * @Date: 2021-11-05 11:48:25
- * @LastEditTime: 2021-11-08 15:58:55
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \T-Impulse-S76G-LoRaWAN\src\menu.h
- */
+
 #ifndef __MENU_H__
 #define __MENU_H__
 
