@@ -1,11 +1,4 @@
-<!--
- * @Author: your name
- * @Date: 2021-11-02 15:30:20
- * @LastEditTime: 2021-11-02 17:23:10
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \T-Impulse-S76G-LoRaWAN\README.md
--->
+
 
 # This article describes how to connect T-Impulse to TTN V3
 ### necessity:
