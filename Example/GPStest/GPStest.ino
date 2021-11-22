@@ -13,7 +13,7 @@
 
 HardwareSerial gpsPort(GPS_RX, GPS_TX);
 
-void GPS_WaitAck(String cmd, long tries=-1, String arg = "")
+bool GPS_WaitAck(String cmd, long tries=-1, String arg = "")
 {
     while (tries>0 || tries==-1)
     {
@@ -38,14 +38,21 @@ void GPS_WaitAck(String cmd, long tries=-1, String arg = "")
                 String acc = "[" + cmd.substring(1) + "] " + "Done";
                 if (ack.startsWith(acc))
                 {
-                    return;
+                    return true;
                 }
             }
         }
         if(tries>0){
           tries--;
-          Serial.println("Nothing on wire!");
         }
+    }
+    if(tries==0){
+      Serial.print("Command failed: ");
+      Serial.print(cmd);
+      Serial.println("");
+      return false;
+    } else {
+      return true;
     }
 }
 
@@ -87,13 +94,15 @@ void setup(void)
 void loop(void)
 {
     static uint32_t Millis;
-    if(millis() - Millis>500)
+    if(millis() - Millis>1000)
     {
       Serial.printf("millis[%lu]\n",millis());
+      Serial.println("");
       Millis = millis();
+      Serial.println("Sending @VER");
+      gpsPort.println("@VER");
     }
 
-    gpsPort.println("@VER");
     while (gpsPort.available() > 0)
     {
         Serial.write(gpsPort.read());
