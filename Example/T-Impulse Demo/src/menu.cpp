@@ -1,4 +1,11 @@
-
+/*
+ * @Author: your name
+ * @Date: 2021-11-05 11:48:15
+ * @LastEditTime: 2021-11-12 10:47:44
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \T-Impulse-S76G-LoRaWAN\src\menu.cpp
+ */
 #include "menu.h"
 
 #define MAX_APP 5
@@ -17,12 +24,12 @@ void MenuInit(void)
     btnInit();
     button->attachClick([]
                         {   
-                            AutoSleepCountTime = 0;
+                            setAutoSleepCountTime(0);
                             btn_next = true;
                             Serial.println("Click"); });
     button->attachDoubleClick([]
                               {
-                                  AutoSleepCountTime = 0;
+                                  setAutoSleepCountTime(0);
                                   btn_join = true;
                                   Serial.println("DoubleClick"); });
     button->attachLongPressStart([]
@@ -31,7 +38,7 @@ void MenuInit(void)
                                      {
                                          PowerDown();
                                      }
-                                     AutoSleepCountTime = 0;
+                                     setAutoSleepCountTime(0);
                                      btn_quit = true;
                                      InApp = false;
                                      Serial.println("LongPress"); });
@@ -60,16 +67,16 @@ void to_right(void)
     {
         CLEAN_MENU;
 
-        u8g2->setFont(menu_entry_list[focus_num].font);
-        u8g2->drawGlyph(x - 20, 29, menu_entry_list[focus_num].icon);
+        getOled()->setFont(menu_entry_list[focus_num].font);
+        getOled()->drawGlyph(x - 20, 29, menu_entry_list[focus_num].icon);
 
         int Candidate = (focus_num + 1) <= MAX_APP ? focus_num + 1 : 0;
-        u8g2->setFont(menu_entry_list[Candidate].font);
-        u8g2->drawGlyph(x + 10, 29, menu_entry_list[Candidate].icon);
+        getOled()->setFont(menu_entry_list[Candidate].font);
+        getOled()->drawGlyph(x + 10, 29, menu_entry_list[Candidate].icon);
 
         Candidate = (Candidate + 1) <= MAX_APP ? Candidate + 1 : 0;
-        u8g2->setFont(menu_entry_list[Candidate].font);
-        u8g2->drawGlyph(x + 40, 29, menu_entry_list[Candidate].icon);
+        getOled()->setFont(menu_entry_list[Candidate].font);
+        getOled()->drawGlyph(x + 40, 29, menu_entry_list[Candidate].icon);
 
         x--;
     }
@@ -92,10 +99,10 @@ void MenuLoop(void)
         button->tick();
         if (x > 0)
         {
-            u8g2->setFont(u8g2_font_IPAandRUSLCD_tr);
+            getOled()->setFont(u8g2_font_IPAandRUSLCD_tr);
 
             CLEAN_TITLE;
-            u8g2->drawStr(x - 128, 8, Title_Str);
+            getOled()->drawStr(x - 128, 8, Title_Str);
 
             PowerTitle();
             x--;
@@ -111,7 +118,7 @@ void MenuLoop(void)
     {
         if (!btn_quit && !btn_join && !btn_next && !InApp)
         {
-            u8g2->drawRFrame(7, 10, 23, 22, 3);
+            getOled()->drawRFrame(7, 10, 23, 22, 3);
         }
         else if (InApp)
         {
@@ -128,20 +135,20 @@ void MenuLoop(void)
         else if (btn_next)
         {
             to_right();
-            u8g2->drawRFrame(7, 10, 23, 22, 3);
+            getOled()->drawRFrame(7, 10, 23, 22, 3);
         }
         else if (btn_quit)
         {
             CLEAN_MENU;
 
-            u8g2->setFont(menu_entry_list[focus_num].font);
-            u8g2->drawGlyph(10, 29, menu_entry_list[focus_num].icon);
+            getOled()->setFont(menu_entry_list[focus_num].font);
+            getOled()->drawGlyph(10, 29, menu_entry_list[focus_num].icon);
 
             int Candidate = (focus_num + 1) < MAX_APP ? focus_num + 1 : 0;
-            u8g2->setFont(menu_entry_list[Candidate].font);
-            u8g2->drawGlyph(40, 29, menu_entry_list[Candidate].icon);
+            getOled()->setFont(menu_entry_list[Candidate].font);
+            getOled()->drawGlyph(40, 29, menu_entry_list[Candidate].icon);
 
-            u8g2->drawRFrame(7, 10, 23, 22, 3);
+            getOled()->drawRFrame(7, 10, 23, 22, 3);
 
             btn_quit = false;
         }
@@ -149,5 +156,5 @@ void MenuLoop(void)
         Millis2 = millis();
     }
 
-    u8g2->sendBuffer();
+    getOled()->sendBuffer();
 }

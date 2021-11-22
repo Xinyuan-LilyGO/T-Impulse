@@ -1,4 +1,11 @@
-
+/*
+ * @Author: your name
+ * @Date: 2021-11-02 09:33:08
+ * @LastEditTime: 2021-11-12 10:45:09
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \wristband-S76G\src\main.cpp
+ */
 #include <Wire.h> // Only needed for Arduino 1.6.5 and earlier
 #include <SPI.h>
 #include "loramac.h"
@@ -39,7 +46,7 @@ void setup()
         TouchPad, [] {}, RISING, DEEP_SLEEP_MODE);
     BoardInit(true);
     IIC_Scan();
-    rtc.setTime(0, 0, 0);
+    getRTC().setTime(0, 0, 0);
     Serial.println("LoRaWan Demo");
 }
 

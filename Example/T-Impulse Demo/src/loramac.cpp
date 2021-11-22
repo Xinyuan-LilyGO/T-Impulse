@@ -30,38 +30,36 @@ static String lora_msg = "";
 void printVariables()
 {
     lpp.reset();
-    float batt_lvl = float((Volt * 3.3 * 2) / 4096);
+    float batt_lvl = float((getVolt() * 3.3 * 2) / 4096);
     lpp.addAnalogInput(3, batt_lvl);
 
-    if (imu->dataReady())
+    if (getIMU()->dataReady())
     {
-        imu->getAGMT();
+        getIMU()->getAGMT();
 
-        float Acc_x = imu->accX();
-        float Acc_y = imu->accY();
-        float Acc_z = imu->accZ();
+        float Acc_x = getIMU()->accX();
+        float Acc_y = getIMU()->accY();
+        float Acc_z = getIMU()->accZ();
         lpp.addAccelerometer(4, Acc_x, Acc_y, Acc_z);
 
-        float Gyr_x = imu->gyrX();
-        float Gyr_y = imu->gyrY();
-        float Gyr_z = imu->gyrZ();
+        float Gyr_x = getIMU()->gyrX();
+        float Gyr_y = getIMU()->gyrY();
+        float Gyr_z = getIMU()->gyrZ();
         lpp.addGyrometer(5, Gyr_x, Gyr_y, Gyr_z);
     }
 
-    if (gps->location.isUpdated() && gps->altitude.isUpdated() && gps->satellites.isUpdated())
+    if (getGPS()->location.isUpdated() && getGPS()->altitude.isUpdated() && getGPS()->satellites.isUpdated())
     {
-        double gps_lat = gps->location.lat();
-        double gps_lng = gps->location.lng();
-        double gps_alt = gps->altitude.meters();
+        double gps_lat = getGPS()->location.lat();
+        double gps_lng = getGPS()->location.lng();
+        double gps_alt = getGPS()->altitude.meters();
         lpp.addGPS(6, (float)gps_lat, (float)gps_lng, (float)gps_alt);
-        uint32_t Value = gps->satellites.value();
+        uint32_t Value = getGPS()->satellites.value();
         lpp.addLuminosity(7, Value);
-        if (u8g2)
-        {
-            char buf[50];
-            sprintf(buf, "[%lu]Satellites", millis() / 1000);
-            Title_Commit(buf);
-        }
+
+        char buf[50];
+        sprintf(buf, "[%lu]Satellites", millis() / 1000);
+        Title_Commit(buf);
     }
 }
 
@@ -105,22 +103,15 @@ void do_send(osjob_t *j)
 
         os_setTimedCallback(&sendjob, os_getTime() + sec2osticks(TX_INTERVAL), do_send);
 
-        if (u8g2)
-        {
-            /*             char buf[256];
-                        u8g2->clearBuffer(); */
-            char buf[50];
-            snprintf(buf, sizeof(buf), "[%lu]data sending!", millis() / 1000);
-            Title_Commit(buf);
-            /*             u8g2->drawStr(0, 12, buf);
-                        u8g2->sendBuffer() */
-            ;
-        }
+        char buf[50];
+        snprintf(buf, sizeof(buf), "[%lu]data sending!", millis() / 1000);
+        Title_Commit(buf);
     }
 }
 
 void onEvent(ev_t ev)
 {
+    char buf[50];
     Serial.print(os_getTime());
     Serial.print(": ");
     switch (ev)
@@ -158,30 +149,16 @@ void onEvent(ev_t ev)
         lora_msg = "OTAA joining....";
         joinStatus = EV_JOINING;
 
-        if (u8g2)
-        {
-            /*            u8g2->clearBuffer();
-                       u8g2->drawStr(0, 12, "OTAA joining....");
-                       u8g2->sendBuffer(); */
-            char buf[50];
-            snprintf(buf, sizeof(buf), "[%lu]OTAA joining....", millis() / 1000);
-            Title_Commit(buf);
-        }
+        snprintf(buf, sizeof(buf), "[%lu]OTAA joining....", millis() / 1000);
+        Title_Commit(buf);
 
         break;
     case EV_JOIN_FAILED:
         Serial.println(F("EV_JOIN_FAILED: -> Joining failed"));
         lora_msg = "OTAA Joining failed";
 
-        if (u8g2)
-        {
-            /*             u8g2->clearBuffer();
-                        u8g2->drawStr(0, 12, "OTAA joining failed");
-                        u8g2->sendBuffer(); */
-            char buf[50];
-            snprintf(buf, sizeof(buf), "[%lu]OTAA joining failed", millis() / 1000);
-            Title_Commit(buf);
-        }
+        snprintf(buf, sizeof(buf), "[%lu]OTAA joining failed", millis() / 1000);
+        Title_Commit(buf);
 
         break;
     case EV_JOINED:
@@ -189,15 +166,8 @@ void onEvent(ev_t ev)
         lora_msg = "Joined!";
         joinStatus = EV_JOINED;
 
-        if (u8g2)
-        {
-            /*             u8g2->clearBuffer();
-                        u8g2->drawStr(0, 12, "Joined TTN!");
-                        u8g2->sendBuffer(); */
-            char buf[50];
-            snprintf(buf, sizeof(buf), "[%lu]Joined TTN!", millis() / 1000);
-            Title_Commit(buf);
-        }
+        snprintf(buf, sizeof(buf), "[%lu]Joined TTN!", millis() / 1000);
+        Title_Commit(buf);
 
         delay(3);
         // Disable link check validation (automatically enabled
@@ -207,15 +177,9 @@ void onEvent(ev_t ev)
         break;
     case EV_RXCOMPLETE:
         // data received in ping slot
-        if (u8g2)
-        {
-            /*             u8g2->clearBuffer();
-                        u8g2->drawStr(0, 12, "New Message!");
-                        u8g2->sendBuffer(); */
-            char buf[50];
-            snprintf(buf, sizeof(buf), "[%lu]New Message!", millis() / 1000);
-            Title_Commit(buf);
-        }
+
+        snprintf(buf, sizeof(buf), "[%lu]New Message!", millis() / 1000);
+        Title_Commit(buf);
 
         Serial.println(F("EV_RXCOMPLETE"));
         break;

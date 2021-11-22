@@ -1,4 +1,11 @@
-
+/*
+ * @Author: your name
+ * @Date: 2021-11-02 09:33:48
+ * @LastEditTime: 2021-11-02 18:38:12
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \wristband-S76G\src\config.h
+ */
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 

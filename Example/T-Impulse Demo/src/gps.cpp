@@ -13,6 +13,8 @@ static char buf1[300];
 
 bool isGPSenable(void) { return GPS_enable; }
 
+TinyGPSPlus *getGPS(void) { return gps; }
+
 void GPS_WaitAck(String cmd, String arg = "")
 {
     while (1)
@@ -96,6 +98,8 @@ void GPS_Sleep(void)
 
     digitalWrite(GPS_EN, LOW);
     digitalWrite(PwrSwitchGPS, LOW);
+
+    gps = nullptr;
 }
 
 void GPS_loop(void)
@@ -119,12 +123,12 @@ void GPSMenuLoop(uint8_t &BTN_state)
 
     char optionbuf[10];
     sprintf(optionbuf, "[%s]gps en", GPS_enable ? "*" : " ");
-    u8g2->setFont(u8g2_font_nokiafc22_tr);
-    u8g2->drawStr(10, 19, optionbuf);
+    getOled()->setFont(u8g2_font_nokiafc22_tr);
+    getOled()->drawStr(10, 19, optionbuf);
 
     //光标
-    u8g2->setFont(u8g2_font_open_iconic_all_1x_t);
-    u8g2->drawGlyph(0, select + 22, 0x4E); //->
+    getOled()->setFont(u8g2_font_open_iconic_all_1x_t);
+    getOled()->drawGlyph(0, select + 22, 0x4E); //->
 
     if (GPS_enable)
     {
@@ -148,16 +152,16 @@ void GPSMenuLoop(uint8_t &BTN_state)
                     gps->altitude.feet());
         }
 
-        int width = -(u8g2->getStrWidth(buf1) + 200);
+        int width = -(getOled()->getStrWidth(buf1) + 200);
         if (x > width)
         {
-            u8g2->setDrawColor(0x00);
-            u8g2->drawBox(0, 20, 64, 12);
-            u8g2->setDrawColor(0xff);
+            getOled()->setDrawColor(0x00);
+            getOled()->drawBox(0, 20, 64, 12);
+            getOled()->setDrawColor(0xff);
 
-            u8g2->setFont(u8g2_font_IPAandRUSLCD_tr);
+            getOled()->setFont(u8g2_font_IPAandRUSLCD_tr);
 
-            u8g2->drawStr(x + 64, 32, buf1);
+            getOled()->drawStr(x + 64, 32, buf1);
 
             x--;
         }

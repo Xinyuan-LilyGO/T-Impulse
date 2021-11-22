@@ -1,4 +1,11 @@
-
+/*
+ * @Author: your name
+ * @Date: 2021-11-02 11:27:48
+ * @LastEditTime: 2021-11-12 10:42:27
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \wristband-S76G\src\Bat.h
+ */
 #ifndef __BAT_H__
 #define __BAT_H__
 
@@ -11,6 +18,6 @@ void Bat_loop(void);
 void PowerTitle(void);
 void PowerDown(void);
 
-extern uint32_t Volt;
+uint32_t getVolt(void);
 
 #endif /* __BAT_H__ */

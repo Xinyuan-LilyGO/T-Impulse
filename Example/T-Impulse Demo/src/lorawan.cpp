@@ -1,7 +1,15 @@
+/*
+ * @Author: your name
+ * @Date: 2021-11-06 17:39:18
+ * @LastEditTime: 2021-11-11 11:42:34
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \T-Impulse-S76G-LoRaWAN\src\lorawan.cpp
+ */
 
 #include "lorawan.h"
 
-bool LoRa_enable = true;
+bool LoRa_enable = false;
 
 void LoRaInit(void)
 {
@@ -36,12 +44,12 @@ void LoRaOledLoop(uint8_t &BTN_state)
 
     char optionbuf[10];
     sprintf(optionbuf, "[%s]lora en", LoRa_enable ? "*" : " ");
-    u8g2->setFont(u8g2_font_nokiafc22_tr);
-    u8g2->drawStr(10, 19, optionbuf);
+    getOled()->setFont(u8g2_font_nokiafc22_tr);
+    getOled()->drawStr(10, 19, optionbuf);
 
     //光标
-    u8g2->setFont(u8g2_font_open_iconic_all_1x_t);
-    u8g2->drawGlyph(0, select + 22, 0x4E); //->
+    getOled()->setFont(u8g2_font_open_iconic_all_1x_t);
+    getOled()->drawGlyph(0, select + 22, 0x4E); //->
 
     switch (BTN_state)
     {

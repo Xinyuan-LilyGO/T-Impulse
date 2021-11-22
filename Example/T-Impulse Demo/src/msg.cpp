@@ -1,4 +1,11 @@
-
+/*
+ * @Author: your name
+ * @Date: 2021-11-08 11:42:53
+ * @LastEditTime: 2021-11-11 11:45:07
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \T-Impulse-S76G-LoRaWAN\src\msg.cpp
+ */
 
 #include "msg.h"
 
@@ -42,18 +49,18 @@ void MsgOledLoop(uint8_t &BTN_state)
     int width = 0;
     for (int i = 0; i < 3; i++)
     {
-        if (u8g2->getStrWidth(msg[i]) > width)
+        if (getOled()->getStrWidth(msg[i]) > width)
         {
-            width = u8g2->getStrWidth(msg[i]);
+            width = getOled()->getStrWidth(msg[i]);
         }
     }
     width = -(width + 100);
     if (x > width)
     {
-        u8g2->setFont(u8g2_font_IPAandRUSLCD_tr);
+        getOled()->setFont(u8g2_font_IPAandRUSLCD_tr);
         for (int i = 0; i < msgRank; i++)
         {
-            u8g2->drawStr(x + 64, FirstHeight + i * RowHeight, msg[i]);
+            getOled()->drawStr(x + 64, FirstHeight + i * RowHeight, msg[i]);
         }
         x--;
     }
@@ -63,14 +70,14 @@ void MsgOledLoop(uint8_t &BTN_state)
     }
 
     //序号
-    u8g2->setDrawColor(0x00);
-    u8g2->drawBox(0, 8, 11, 24);
-    u8g2->setDrawColor(0xff);
+    getOled()->setDrawColor(0x00);
+    getOled()->drawBox(0, 8, 11, 24);
+    getOled()->setDrawColor(0xff);
 
-    u8g2->setFont(u8g2_font_nokiafc22_tr);
-    u8g2->drawStr(0, 16, "1.");
-    u8g2->drawStr(0, 24, "2.");
-    u8g2->drawStr(0, 32, "3.");
+    getOled()->setFont(u8g2_font_nokiafc22_tr);
+    getOled()->drawStr(0, 16, "1.");
+    getOled()->drawStr(0, 24, "2.");
+    getOled()->drawStr(0, 32, "3.");
 
     switch (BTN_state)
     {

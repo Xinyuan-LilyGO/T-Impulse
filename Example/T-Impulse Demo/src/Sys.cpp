@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-08 08:53:04
- * @LastEditTime: 2021-11-08 15:59:46
+ * @LastEditTime: 2021-11-12 10:47:23
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%A
  * @FilePath: \T-Impulse-S76G-LoRaWAN\src\Sys.cpp
@@ -14,6 +14,11 @@
 bool AutoSleep_en = false;
 uint32_t TriggerSleepTime = 10; // S
 uint32_t AutoSleepCountTime = 0;
+
+void setAutoSleepCountTime(uint32_t time)
+{
+    AutoSleepCountTime = time;
+}
 
 void IIC_Scan(void)
 {
@@ -71,16 +76,16 @@ void SysOledLoop(uint8_t &BTN_state)
     CLEAN_MENU;
 
     sprintf(optionbuf, "[%s]Auto Sleep", AutoSleep_en ? "*" : " ");
-    u8g2->setFont(u8g2_font_nokiafc22_tr);
-    u8g2->drawStr(10, FirstHeight + RowHeight, optionbuf);
+    getOled()->setFont(u8g2_font_nokiafc22_tr);
+    getOled()->drawStr(10, FirstHeight + RowHeight, optionbuf);
 
     sprintf(optionbuf, "tri time[%dS]", TriggerSleepTime);
-    u8g2->setFont(u8g2_font_nokiafc22_tr);
-    u8g2->drawStr(10, FirstHeight + (RowHeight * 2), optionbuf);
+    getOled()->setFont(u8g2_font_nokiafc22_tr);
+    getOled()->drawStr(10, FirstHeight + (RowHeight * 2), optionbuf);
 
     //光标
-    u8g2->setFont(u8g2_font_open_iconic_all_1x_t);
-    u8g2->drawGlyph(0, FirstHeight + (select * RowHeight) + RowHeight, 0x4E); //->
+    getOled()->setFont(u8g2_font_open_iconic_all_1x_t);
+    getOled()->drawGlyph(0, FirstHeight + (select * RowHeight) + RowHeight, 0x4E); //->
 
     switch (BTN_state)
     {

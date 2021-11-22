@@ -1,4 +1,11 @@
-
+/*
+ * @Author: your name
+ * @Date: 2021-11-02 11:27:42
+ * @LastEditTime: 2021-11-12 10:42:03
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \wristband-S76G\src\Bat.cpp
+ */
 #include <Arduino.h>
 #include "Bat.h"
 #include "config.h"
@@ -10,6 +17,11 @@
 
 ADC_HandleTypeDef hadc;
 uint32_t Volt = 0;
+
+uint32_t getVolt(void)
+{
+    return Volt;
+}
 
 static void MX_ADC_Init(void)
 {
@@ -72,10 +84,10 @@ void Bat_loop(void)
     {
         if (HAL_ADC_GetValue(&hadc) < 2150)
         {
-            u8g2->clearBuffer();
-            u8g2->setFont(u8g2_font_battery19_tn);
-            u8g2->drawGlyph(22, 4, 0x61);
-            u8g2->sendBuffer();
+            getOled()->clearBuffer();
+            getOled()->setFont(u8g2_font_battery19_tn);
+            getOled()->drawGlyph(22, 4, 0x61);
+            getOled()->sendBuffer();
             delay(2000);
             PowerDown();
         }
@@ -85,15 +97,15 @@ void Bat_loop(void)
 
 void PowerTitle(void)
 {
-    u8g2->setDrawColor(0x00);
-    u8g2->drawBox(56, 0, 9, 10);
-    u8g2->setDrawColor(0xff);
+    getOled()->setDrawColor(0x00);
+    getOled()->drawBox(56, 0, 9, 10);
+    getOled()->setDrawColor(0xff);
 
-    u8g2->drawFrame(57, 2, 6, 4);
-    u8g2->drawVLine(63, 3, 2);
+    getOled()->drawFrame(57, 2, 6, 4);
+    getOled()->drawVLine(63, 3, 2);
 
     uint8_t vol = (constrain(Volt, 2100, 2500) - 2100) / 100;
-    u8g2->drawFrame(58, 3, vol, 2);
+    getOled()->drawFrame(58, 3, vol, 2);
 }
 
 void PowerDown(void)
@@ -102,9 +114,7 @@ void PowerDown(void)
     LoRa_Sleep();
     OledSleep();
 
-    gps = nullptr;
     button = nullptr;
-    u8g2 = nullptr;
 
     HAL_ADC_Stop(&hadc);
     HAL_ADC_DeInit(&hadc);

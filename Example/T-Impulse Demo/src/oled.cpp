@@ -1,13 +1,25 @@
-
+/*
+ * @Author: your name
+ * @Date: 2021-11-02 10:55:17
+ * @LastEditTime: 2021-11-11 11:43:20
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \wristband-S76G\src\oled.cpp
+ */
 #include "oled.h"
 #include "config.h"
 #include "RTC.h"
 
-U8G2_SSD1306_64X32_1F_F_HW_I2C *u8g2 = nullptr;
+OledClass *u8g2 = nullptr;
+
+OledClass *getOled(void)
+{
+    return u8g2;
+}
 
 void OledInit(bool Anima)
 {
-    u8g2 = new U8G2_SSD1306_64X32_1F_F_HW_I2C(U8G2_R0, OLED_RESET, IICSCL, IICSDA);
+    u8g2 = new OledClass(U8G2_R0, OLED_RESET, IICSCL, IICSDA);
 
     u8g2->begin();
     u8g2->setContrast(0x00);
@@ -42,4 +54,5 @@ void OledInit(bool Anima)
 void OledSleep(void)
 {
     u8g2->sleepOn();
+    u8g2 = nullptr;
 }
