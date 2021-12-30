@@ -15,35 +15,33 @@ HardwareSerial gpsPort(GPS_RX, GPS_TX);
 
 void GPS_WaitAck(String cmd, String arg = "")
 {
-  while (1)
+  if (arg != "")
   {
-    if (arg != "")
+    gpsPort.print(cmd);
+    gpsPort.print(" ");
+    gpsPort.println(arg);
+  }
+  else
+  {
+    gpsPort.println(cmd);
+  }
+  String ack = "";
+  uint32_t smap = millis() + 500;
+  while (millis() < smap)
+  {
+    if (gpsPort.available() > 0)
     {
-      gpsPort.print(cmd);
-      gpsPort.print(" ");
-      gpsPort.println(arg);
-    }
-    else
-    {
-      gpsPort.println(cmd);
-    }
-    String ack = "";
-    uint32_t smap = millis() + 500;
-    while (millis() < smap)
-    {
-      if (gpsPort.available() > 0)
+      ack = gpsPort.readStringUntil('\n');
+      String acc = "[" + cmd.substring(1) + "] " + "Done";
+      if (ack.startsWith(acc))
       {
-        ack = gpsPort.readStringUntil('\n');
-        String acc = "[" + cmd.substring(1) + "] " + "Done";
-        if (ack.startsWith(acc))
-        {
-          Serial.printf("%s %s send success \n", cmd.c_str(), arg.c_str());
-          return;
-        }
+        Serial.printf("%s %s send success \n", cmd.c_str(), arg.c_str());
+        return;
       }
     }
-    Serial.printf("%s %s send time out \n", cmd.c_str(), arg.c_str());
   }
+  Serial.printf("%s %s send time out \n", cmd.c_str(), arg.c_str());
+
 }
 
 void setup(void)
