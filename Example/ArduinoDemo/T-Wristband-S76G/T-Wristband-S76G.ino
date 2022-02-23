@@ -916,8 +916,8 @@ void BoardInit(void)
 
   Serial.begin(115200);
 
-  Wire.setSCL(IICSCL);
-  Wire.setSDA(IICSDA);
+  Wire.setSCL(MySCL);
+  Wire.setSDA(MySDA);
   Wire.begin();
 
   rtc.begin();

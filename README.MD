@@ -58,7 +58,7 @@
 
 - Open the device manager, as shown in the figure, you will find `STM Device in DFU Mode`. At this time, the firmware cannot be uploaded. You need to use [zadig](https://zadig.akeo.ie/) to replace the original driver. The operation steps are as follows 
     ![](image/1.png)
-- Choose `STM32 BOOLTOADER`
+- Choose `STM32 BOOLTOADER`,Note not `NUCLEO_L073RZ CDC in FS Mode`.
     ![](image/2.png)
 - Click Replace Driver
     ![](image/3.png)
