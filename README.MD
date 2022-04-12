@@ -40,6 +40,9 @@
 ![](image/PinOut.jpg)
 
 
+## NOTICE
+### 1.The version of SX1276 in the S76G is `0x13`. In most ARDUINO libraries the detection is judged to be `0X12`. Therefore, the sending is abnormal. It is recommended to annotate the version number verification or add `0x13` to register address `0x42` in different ARDUINO libraries
+
 ## Q&A
 ### 1. Arduino IDE user prerequisites 
 - Please follow this guide [Getting-started](https://github.com/stm32duino/Arduino_Core_STM32#getting-started) to complete the installation of `Arduino_Core_STM32` 
