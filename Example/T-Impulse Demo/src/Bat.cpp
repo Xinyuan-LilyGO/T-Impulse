@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 11:27:42
- * @LastEditTime: 2021-11-12 10:42:03
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\Bat.cpp
- */
 #include <Arduino.h>
 #include "Bat.h"
 #include "config.h"
@@ -58,13 +50,13 @@ static void MX_ADC_Init(void)
     HAL_ADCEx_Calibration_Start(&hadc, ADC_SINGLE_ENDED);
 }
 
-void Bat_Init(void)
+void bat_init(void)
 {
     MX_ADC_Init();
     HAL_ADC_Start(&hadc);
 }
 
-void Bat_loop(void)
+void bat_loop(void)
 {
     static uint32_t vot, Millis;
     static uint8_t i;

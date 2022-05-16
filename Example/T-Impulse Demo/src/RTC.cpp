@@ -1,12 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-04 15:40:41
- * @LastEditTime: 2021-11-12 10:44:15
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \T-Impulse-S76G-LoRaWAN\src\RTC.cpp
- */
-
 #include "RTC.h"
 #include "gps.h"
 #include "oled.h"
@@ -19,7 +10,7 @@ STM32RTC &getRTC(void)
     return rtc;
 }
 
-void RTCInit(void)
+void rtc_init(void)
 {
     rtc.begin();
 }

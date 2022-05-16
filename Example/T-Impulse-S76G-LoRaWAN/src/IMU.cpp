@@ -1,17 +1,9 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 11:12:50
- * @LastEditTime: 2021-11-02 11:22:28
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\IMU.CPP
- */
-
 #include "IMU.h"
 
+bool is_inited_imu = true;
 ICM_20948_I2C *imu = nullptr;
 
-void IMUInit(void)
+void imu_init(void)
 {
     imu = new ICM_20948_I2C();
 
@@ -19,6 +11,7 @@ void IMUInit(void)
     if (imu->status != ICM_20948_Stat_Ok)
     {
         Serial.println("setup imu sensor FAIL");
+        is_inited_imu = false;
         return;
     }
     Serial.println("ICM_20948_Stat_Ok");

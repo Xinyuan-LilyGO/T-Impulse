@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 11:12:50
- * @LastEditTime: 2021-11-12 10:43:03
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\imu->CPP
- */
 
 #include "IMU.h"
 #include <Wire.h>
@@ -21,11 +13,11 @@ ICM_20948_I2C *getIMU(void)
     return imu;
 }
 
-void IMUInit(void)
+void imu_init(void)
 {
     imu = new ICM_20948_I2C();
 
-    imu->begin(Wire, ICM20948_ADDR, ICM20948_int);
+    imu->begin(Wire, ICM20948_ADDR, ICM20948_INT_PIN);
     if (imu->status != ICM_20948_Stat_Ok)
     {
         Serial.println("setup imu sensor FAIL");
@@ -34,7 +26,7 @@ void IMUInit(void)
     Serial.println("ICM_20948_Stat_Ok");
 }
 
-void IMULoop(uint8_t &BTN_state)
+void imu_loop(uint8_t &BTN_state)
 {
     static uint32_t Millis;
     CLEAN_MENU;
