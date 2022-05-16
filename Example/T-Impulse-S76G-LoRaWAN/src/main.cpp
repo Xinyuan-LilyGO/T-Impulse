@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 09:33:08
- * @LastEditTime: 2021-11-02 14:49:43
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\main.cpp
- */
 #include <Wire.h> // Only needed for Arduino 1.6.5 and earlier
 #include <SPI.h>
 #include "loramac.h"
@@ -31,27 +23,26 @@ void LoraWanInit(void)
 
 void BoardInit(void)
 {
-    pinMode(PwrSwitch1_8V, OUTPUT);
-    digitalWrite(PwrSwitch1_8V, HIGH);
-    pinMode(PwrSwitchGPS, OUTPUT);
-    digitalWrite(PwrSwitchGPS, HIGH);
+    pinMode(PWR_1_8V_PIN, OUTPUT);
+    digitalWrite(PWR_1_8V_PIN, HIGH);
+    pinMode(PWR_GPS_PIN, OUTPUT);
+    digitalWrite(PWR_GPS_PIN, HIGH);
     Serial.begin(115200);
 
     Wire.setSCL(IICSCL);
     Wire.setSDA(IICSDA);
     Wire.begin();
 
-    GPS_Init();
-    OledInit();
-    IMUInit();
-
-    Bat_Init();
-    pinMode(BatteryVol, INPUT_ANALOG);
+    gps_init();
+    oled_init();
+    imu_init();
+    bat_init();
+    pinMode(BAT_VOLT_PIN, INPUT_ANALOG);
 
     LoraWanInit();
 
     pinMode(TTP223_VDD_PIN, OUTPUT);
-    pinMode(TouchPad, INPUT);
+    pinMode(TOUCH_PAD_PIN, INPUT);
     digitalWrite(TTP223_VDD_PIN, HIGH);
 }
 
@@ -66,6 +57,6 @@ void setup()
 void loop()
 {
     loopLMIC();
-    Bat_loop();
-    GPS_loop();
+    bat_loop();
+    gps_loop();
 }

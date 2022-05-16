@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 09:33:48
- * @LastEditTime: 2021-11-02 10:56:22
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\config.h
- */
 #ifndef __CONFIG_H__
 #define __CONFIG_H__
 
@@ -31,8 +23,6 @@
 #define LORA_DIO4_PIN PB3
 #define LORA_DIO5_PIN PA15
 
-#define LoRa_frequency 868E6
-
 #define RADIO_ANT_SWITCH_RXTX PA1 // 1:Rx, 0:Tx
 
 // SSD1306
@@ -42,14 +32,14 @@
 
 // TOUCH
 #define TTP223_VDD_PIN PA2
-#define TouchPad PA0
+#define TOUCH_PAD_PIN PA0
 
 // ICM20948
 #define ICM20948_ADDR 0x69
 
-#define PwrSwitch1_8V PB0
-#define PwrSwitchGPS PA3
+#define PWR_1_8V_PIN PB0
+#define PWR_GPS_PIN PA3
 
-#define BatteryVol PC4
+#define BAT_VOLT_PIN PC4
 
 #endif /* __CONFIG_H__ */

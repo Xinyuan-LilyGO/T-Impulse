@@ -1,17 +1,10 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 10:55:17
- * @LastEditTime: 2021-11-02 11:57:43
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\oled.cpp
- */
+
 #include "oled.h"
 #include "config.h"
 
 U8G2_SSD1306_64X32_1F_F_HW_I2C *u8g2 = nullptr;
 
-void OledInit(void)
+void oled_init(void)
 {
     u8g2 = new U8G2_SSD1306_64X32_1F_F_HW_I2C(U8G2_R0, OLED_RESET, IICSCL, IICSDA);
 
@@ -30,10 +23,6 @@ void OledInit(void)
         u8g2->drawBox(3, 26, (uint8_t)(0.231 * i), 5);
         u8g2->sendBuffer();
     }
-/*     for (int i = 0; i < 0xFF; i++)
-    {
-        u8g2->setContrast(0xFF - i);
-        delay(10);
-    } */
+
     u8g2->setFont(u8g2_font_IPAandRUSLCD_tr);
 }

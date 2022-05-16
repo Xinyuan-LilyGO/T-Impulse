@@ -1,12 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 10:50:08
- * @LastEditTime: 2021-11-02 11:18:56
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\gps.cpp
- */
-
 #include <TinyGPS++.h>
 #include "config.h"
 
@@ -43,7 +34,7 @@ void GPS_WaitAck(String cmd, String arg = "")
         }
     }
 }
-void GPS_Init(void)
+void gps_init(void)
 {
     gps = new TinyGPSPlus();
     gpsPort.begin(GPS_BAUD_RATE);
@@ -66,7 +57,7 @@ void GPS_Init(void)
     GPS_WaitAck("@GSR");
 }
 
-void GPS_loop(void)
+void gps_loop(void)
 {
     while (gpsPort.available() > 0)
     {

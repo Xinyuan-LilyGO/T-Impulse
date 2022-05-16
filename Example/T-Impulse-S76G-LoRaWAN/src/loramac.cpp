@@ -33,6 +33,7 @@ static int joinStatus = EV_JOINING;
 static const unsigned TX_INTERVAL = 15;
 static String lora_msg = "";
 
+/* Data to be uploaded to cayenne */
 void printVariables()
 {
     lpp.reset();
@@ -48,7 +49,7 @@ void printVariables()
         lpp.addGenericSensor(5, Value);
     }
 
-    if (imu->dataReady())
+    if (imu->dataReady() && is_inited_imu)
     {
         imu->getAGMT();
 
@@ -97,11 +98,11 @@ void do_send(osjob_t *j)
     else
     {
         Serial.println(F("OP_TXRXPEND,sending ..."));
-        static uint8_t mydata[] = "Hello, world!";
 
         printVariables();
         LMIC_setTxData2(1, lpp.getBuffer(), lpp.getSize(), 0);
 
+        // static uint8_t mydata[] = "Hello, world!";
         // Prepare upstream data transmission at the next possible time.
         // LMIC_setTxData2(1, mydata, sizeof(mydata) - 1, 0);
 
