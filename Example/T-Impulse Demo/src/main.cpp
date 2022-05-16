@@ -20,8 +20,8 @@
 
 void BoardInit(bool Anima)
 {
-    pinMode(PwrSwitch1_8V, OUTPUT);
-    digitalWrite(PwrSwitch1_8V, HIGH);
+    pinMode(PWR_1_8V_PIN, OUTPUT);
+    digitalWrite(PWR_1_8V_PIN, HIGH);
 
     Serial.begin(115200);
 
@@ -29,12 +29,12 @@ void BoardInit(bool Anima)
     Wire.setSDA(IICSDA);
     Wire.begin();
 
-    GPS_Init();
-    Bat_Init();
-    pinMode(BatteryVol, INPUT_ANALOG);
-    OledInit(Anima);
-    IMUInit();
-    RTCInit();
+    gps_init();
+    bat_init();
+    pinMode(BAT_VOLT_PIN, INPUT_ANALOG);
+    oled_init(Anima);
+    imu_init();
+    rtc_init();
     LoRaInit();
     MenuInit();
 }
@@ -43,7 +43,7 @@ void setup()
 {
     LowPower.begin();
     LowPower.attachInterruptWakeup(
-        TouchPad, [] {}, RISING, DEEP_SLEEP_MODE);
+        TOUCH_PAD_PIN, [] {}, RISING, DEEP_SLEEP_MODE);
     BoardInit(true);
     IIC_Scan();
     getRTC().setTime(0, 0, 0);
@@ -53,8 +53,8 @@ void setup()
 void loop()
 {
     LoRaLoop();
-    Bat_loop();
-    GPS_loop();
+    bat_loop();
+    gps_loop();
     MenuLoop();
     SysLoop();
 }

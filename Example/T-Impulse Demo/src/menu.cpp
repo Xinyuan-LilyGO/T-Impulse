@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-05 11:48:15
- * @LastEditTime: 2021-11-12 10:47:44
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \T-Impulse-S76G-LoRaWAN\src\menu.cpp
- */
 #include "menu.h"
 
 #define MAX_APP 5
@@ -55,7 +47,7 @@ struct menu_entry_type menu_entry_list[] =
         {u8g2_font_open_iconic_all_2x_t, 0x7B, RTCLoop},          // clock
         {u8g2_font_open_iconic_all_2x_t, 0xAF, GPSMenuLoop},      // gps
         {u8g2_font_open_iconic_all_2x_t, 0xF8, LoRaOledLoop},     // lora
-        {u8g2_font_open_iconic_all_2x_t, 0x107, IMULoop},         // IMU
+        {u8g2_font_open_iconic_all_2x_t, 0x107, imu_loop},         // IMU
         {u8g2_font_open_iconic_all_2x_t, 0x87, MsgOledLoop},      // massage
         {u8g2_font_open_iconic_embedded_2x_t, 0x48, SysOledLoop}, // sys
 };

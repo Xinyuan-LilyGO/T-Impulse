@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 10:55:17
- * @LastEditTime: 2021-11-11 11:43:20
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: \wristband-S76G\src\oled.cpp
- */
 #include "oled.h"
 #include "config.h"
 #include "RTC.h"
@@ -17,7 +9,7 @@ OledClass *getOled(void)
     return u8g2;
 }
 
-void OledInit(bool Anima)
+void oled_init(bool Anima)
 {
     u8g2 = new OledClass(U8G2_R0, OLED_RESET, IICSCL, IICSDA);
 

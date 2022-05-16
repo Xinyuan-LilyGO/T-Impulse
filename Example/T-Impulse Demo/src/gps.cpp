@@ -45,10 +45,10 @@ void GPS_WaitAck(String cmd, String arg = "")
         }
     }
 }
-void GPS_Init(void)
+void gps_init(void)
 {
-    pinMode(PwrSwitchGPS, OUTPUT);
-    digitalWrite(PwrSwitchGPS, HIGH);
+    pinMode(PWR_GPS_PIN, OUTPUT);
+    digitalWrite(PWR_GPS_PIN, HIGH);
 
     gps = new TinyGPSPlus();
     gpsPort.begin(GPS_BAUD_RATE);
@@ -94,15 +94,15 @@ void GPS_Init(void)
 void GPS_Sleep(void)
 {
     pinMode(GPS_EN, OUTPUT);
-    pinMode(PwrSwitchGPS, OUTPUT);
+    pinMode(PWR_GPS_PIN, OUTPUT);
 
     digitalWrite(GPS_EN, LOW);
-    digitalWrite(PwrSwitchGPS, LOW);
+    digitalWrite(PWR_GPS_PIN, LOW);
 
     gps = nullptr;
 }
 
-void GPS_loop(void)
+void gps_loop(void)
 {
     while (gpsPort.available() > 0)
     {
@@ -177,7 +177,7 @@ void GPSMenuLoop(uint8_t &BTN_state)
         break;
     case 0x02:
         GPS_enable = !GPS_enable;
-        GPS_enable ? GPS_Init() : GPS_Sleep();
+        GPS_enable ? gps_init() : GPS_Sleep();
         GPS_enable ? Title_Commit("GPS begin!") : Title_Commit("GPS shutdown!");
         break;
     default:
