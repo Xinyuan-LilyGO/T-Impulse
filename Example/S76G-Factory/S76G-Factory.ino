@@ -39,6 +39,7 @@
 #define TOUCH_PIN                 PA0
 #define GPS_PWR_ON_PIN            PA3
 #define _1_8V_PWR_ON_PIN          PB0
+#define CONVERSION_PWR_ON_PIN     PB5
 #define BAT_VOLT_PIN              PC4
 #define MOTOR_PIN                 PA5
 // IIC_ADDRESS
@@ -408,7 +409,7 @@ void func_gps(void) {
       break;
     }
     u8g2.setCursor(0, 16);
-    u8g2.print(F("Fix Val="));
+    u8g2.print(F("Fix ="));
     u8g2.setCursor(48, 16);
     u8g2.print(satellites);
 
@@ -418,7 +419,7 @@ void func_gps(void) {
     u8g2.print(Lat);
 
     u8g2.setCursor(0, 32);
-    u8g2.print(F("Long="));
+    u8g2.print(F("Lng="));
     u8g2.setCursor(42, 32);
     u8g2.print(Long);
     u8g2.sendBuffer();
@@ -837,11 +838,15 @@ void Board_Sleep(void) {
   pinMode(PA11, INPUT_ANALOG);
   pinMode(PA12, INPUT_ANALOG);
   pinMode(GPS_LEVEL_SHIFTER_EN, INPUT_ANALOG);
+  pinMode(CONVERSION_PWR_ON_PIN, OUTPUT);
 
   digitalWrite(IIC_SDA_PIN, HIGH);
   digitalWrite(IIC_SCL_PIN, HIGH);
   digitalWrite(_1_8V_PWR_ON_PIN, LOW);
   digitalWrite(GPS_PWR_ON_PIN, LOW);
+  digitalWrite(CONVERSION_PWR_ON_PIN, LOW);
+
+  LL_GPIO_LockPin(GPIOB, LL_GPIO_PIN_6 | LL_GPIO_PIN_7);
 
   LowPower.deepSleep();
   BoardInit();
@@ -881,8 +886,11 @@ void iic_scan(void) {
 void BoardInit(void) {
   pinMode(_1_8V_PWR_ON_PIN, OUTPUT);
   pinMode(GPS_PWR_ON_PIN, OUTPUT);
+  pinMode(CONVERSION_PWR_ON_PIN, OUTPUT);
+
   digitalWrite(_1_8V_PWR_ON_PIN, HIGH);
   digitalWrite(GPS_PWR_ON_PIN, HIGH);
+  digitalWrite(CONVERSION_PWR_ON_PIN, HIGH);
 
   pinMode(OLED_RESET_PIN, OUTPUT);
   digitalWrite(OLED_RESET_PIN, HIGH);

@@ -38,8 +38,8 @@
 #define ICM20948_ADDR 0x69
 #define ICM20948_INT_PIN PB1
 
-#define PWR_1_8V_PIN PB0
-#define PWR_GPS_PIN PA3
+#define PWR_1_8V_PIN PB0 
+#define PWR_GPS_PIN PA3 
 
 #define BAT_VOLT_PIN PC4
 

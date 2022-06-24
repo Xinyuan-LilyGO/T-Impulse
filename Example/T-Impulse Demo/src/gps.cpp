@@ -17,30 +17,28 @@ TinyGPSPlus *getGPS(void) { return gps; }
 
 void GPS_WaitAck(String cmd, String arg = "")
 {
-    while (1)
+
+    if (arg != "")
     {
-        if (arg != "")
+        gpsPort.print(cmd);
+        gpsPort.print(" ");
+        gpsPort.println(arg);
+    }
+    else
+    {
+        gpsPort.println(cmd);
+    }
+    String ack = "";
+    uint32_t smap = millis() + 500;
+    while (millis() < smap)
+    {
+        if (gpsPort.available() > 0)
         {
-            gpsPort.print(cmd);
-            gpsPort.print(" ");
-            gpsPort.println(arg);
-        }
-        else
-        {
-            gpsPort.println(cmd);
-        }
-        String ack = "";
-        uint32_t smap = millis() + 500;
-        while (millis() < smap)
-        {
-            if (gpsPort.available() > 0)
+            ack = gpsPort.readStringUntil('\n');
+            String acc = "[" + cmd.substring(1) + "] " + "Done";
+            if (ack.startsWith(acc))
             {
-                ack = gpsPort.readStringUntil('\n');
-                String acc = "[" + cmd.substring(1) + "] " + "Done";
-                if (ack.startsWith(acc))
-                {
-                    return;
-                }
+                return;
             }
         }
     }
